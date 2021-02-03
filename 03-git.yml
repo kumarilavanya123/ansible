@@ -1,0 +1,35 @@
+---
+- hosts: web
+  become: true
+
+  tasks:
+  - name: Install git
+    yum:
+      name: git
+      state: present
+      update_cache: yes
+
+  - name: Install wget
+    yum:
+      name: wget
+      state: present
+      update_cache: yes
+
+  - name: Install vim
+    yum:
+      name: vim
+      state: present
+      update_cache: yes
+
+  - name: Install maven
+    yum:
+      name: maven
+      state: latest
+      update_cache: yes
+
+  - name: Install java
+    yum:
+      name: java
+      state: latest
+      update_cache: yes
+
