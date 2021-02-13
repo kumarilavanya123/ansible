@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+  - name: install vim
+    yum:
+      name: vim
+      state: present
+

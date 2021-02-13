@@ -1,0 +1,21 @@
+---
+- name: update web servers 
+  hosts: web
+  become: true
+
+  tasks:
+  - name: install git
+    yum:
+      name: git
+      state: present
+
+- name: update app servers
+  hosts: app
+  become: true
+
+  tasks:
+  - name: wget
+    yum:
+      name: wget
+      state: present
+

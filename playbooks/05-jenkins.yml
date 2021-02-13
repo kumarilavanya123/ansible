@@ -1,0 +1,68 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: install vim,wget,unzip,java-1.8.0*,git,maven
+    yum: 
+      name: vim,wget,unzip,java-1.8.0*,git,maven
+      state: latest
+
+  - name: install maven
+    yum:
+      name: maven
+      state: latest
+
+  - name: install sonarqube
+    get_url:
+        dest: /home/centos/
+        url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-6.7.7.zip
+
+  - name: unzip sonarqube
+    unarchive:
+         src: /home/centos/sonarqube-6.7.7.zip
+         dest: /home/centos/
+         remote_src: yes
+  - name: port for sonarqube
+    shell: "/home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh start || /home/centos/sonarqube-6.7.7/bin/linux-x86-64/sonar.sh status"
+    become: no
+  - name: install nexus
+    get_url:
+        url: https://download.sonatype.com/nexus/oss/nexus-2.14.18-01-bundle.tar.gz
+        dest: /home/centos/
+  - name: unzip nexus
+    unarchive:
+         src: /home/centos/nexus-2.14.18-01-bundle.tar.gz
+         dest: /home/centos/
+         remote_src: yes
+  - name: nexus port - 8081/nexus
+    shell: "/home/centos/nexus-2.14.18-01/bin/nexus start || /home/centos/nexus-2.14.18-01/bin/nexus status "
+    become: no
+  - name: install tomcat
+    get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz
+        dest: /home/centos
+    become: no
+  - name: unarchive tomcat
+    unarchive:
+         src: /home/centos/apache-tomcat-7.0.94.tar.gz
+         dest: /home/centos/
+         remote_src: yes
+    become: no
+  - name: port for tomcat - 8080
+    shell: "/home/centos/apache-tomcat-7.0.94/bin/startup.sh"
+    become: no
+  - name: install docker
+    yum:
+      name: docker
+      state: latest
+    become: yes
+  - name: enabling
+    service:
+      name: docker
+      state: started
+      enabled: yes
+  - name: addign docker group
+    shell: |
+       sudo groupadd docker || echo " group - docker already added "
+       sudo usermod -aG docker $(whoami)
+       

@@ -1,0 +1,23 @@
+---
+- hosts: web
+  become: true
+  
+  tasks:
+  - name: install java-1.8.0*
+    yum:
+      name: java
+      state: latest
+      update_cache: yes
+  - name: wget
+    yum:
+      name: wget
+      state: present
+      update_cache: yes
+  - name: url
+    get_url:
+      src: /home/centos/
+      dest: /home/centos/
+      url: https://binaries.sonarsource.com/CommercialDistribution/sonarqube-developer/sonarqube-developer-7.9.1.zip
+      update_cache: yes
+ 
+
